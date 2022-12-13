@@ -1,5 +1,5 @@
-import { SdkConfig } from "./types"
-import { logger } from "./log"
+import {LogTypes, SdkConfig} from "./types"
+import {logger} from "./log"
 
 export default function (config: SdkConfig) {
   console.log('sendRequest', config)
@@ -8,18 +8,31 @@ export default function (config: SdkConfig) {
   const originalOpen = xhrProto.open
   const originalSend = xhrProto.send
 
-  xhrProto.open = function (method: string, url: string) {
-    console.log(this.getResponseHeader(this), [...arguments])
+  xhrProto.open = function () {
+    console.log([...arguments])
+    const [method, url, async] = [...arguments]
     // 定制逻辑
-    logger([...arguments])
+    logger({type: LogTypes.req, data: {method, url, async}})
     originalOpen.apply(this, [...arguments])
   }
-  xhrProto.send = function () {
+  xhrProto.send = function (data) {
     const _this = this
+    console.log('99', [...arguments]);
+    // _this.responseType = 'json'
     // 定制逻辑
     function handler() {
+      console.log('_this.readyState', _this.readyState)
       if(_this.readyState === 4){
-        logger(_this.response)
+        // _this.responseType = 'json'
+        logger({
+          type: LogTypes.res,
+          data: {
+            requestData: data,
+            responseData: _this.response,
+            responseHeaders: _this.getAllResponseHeaders()
+          }
+        }
+        )
       }
     }
     const originalStateChange = _this.onreadystatechange

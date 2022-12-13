@@ -1,8 +1,7 @@
-import { SdkConfig } from "./types"
+import {LogTypes, SdkConfig} from "./types"
 import { logger } from "./log"
 
 export default function (config: SdkConfig) {
-  console.log(config)
   const win = window
   // 原本方法
   const originalOnError = win.onerror
@@ -14,7 +13,10 @@ export default function (config: SdkConfig) {
     }
 
     if(error !== null){
-      logger({ msg, source, line, row, error })
+      logger({
+        type: LogTypes.jse,
+        data: { msg, source, line, row, error }
+      })
     }
   }
   win.onerror = function (msg, source, line, row, error) {
