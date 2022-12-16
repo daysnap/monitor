@@ -2,7 +2,9 @@ export interface SdkConfig {
   accountId?: string // 用户id
   appName?: string // 应用名称
   appId?: string // 应用id
-  sendJsError: boolean // 是否发送js报错
+  sendJsError?: boolean // 是否发送js报错
+  sendRequest?: boolean // 是否发送请求日志
+  sendPv?: boolean // 是否发送页面访问日志
   uploadUrl: string // 上传api
   spa: boolean //  是否是spa
   [key: string]: any

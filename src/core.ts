@@ -6,8 +6,6 @@ import { SdkConfig } from './types'
 export function init(opt: SdkConfig) {
   // 默认参数
   const config = {
-    sendJsError: true,// 上报js error
-    sendRequest: true,// 上报请求日志
     sendPv: true,
     spa: true,
     ...opt
